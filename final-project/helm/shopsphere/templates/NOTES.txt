@@ -1,0 +1,14 @@
+ShopSphere has been installed.
+
+Check status:
+  kubectl get all -n {{ .Values.namespace }}
+  kubectl get ingress -n {{ .Values.namespace }}
+
+NodePort access:
+  minikube service frontend -n {{ .Values.namespace }} --url
+
+Ingress access:
+  minikube ip
+  curl.exe --resolve {{ .Values.ingress.host }}:80:<minikube-ip> http://{{ .Values.ingress.host }}/
+  curl.exe --resolve {{ .Values.ingress.host }}:80:<minikube-ip> http://{{ .Values.ingress.host }}/orders
+  curl.exe --resolve {{ .Values.ingress.host }}:80:<minikube-ip> http://{{ .Values.ingress.host }}/payments

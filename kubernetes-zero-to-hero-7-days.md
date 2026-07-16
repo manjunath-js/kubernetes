@@ -305,7 +305,41 @@ minikube stop
 ```
 
 Detailed module: [day7/README.md](day7/README.md)
+## Final Capstone Project - ShopSphere
 
+After Day 7, students should build the final project to connect every topic into one production-like Kubernetes platform.
 
+Detailed module: [final-project/README.md](final-project/README.md)
 
+Focus:
+
+- Multi-service ecommerce architecture.
+- Frontend, orders API, payments API, and PostgreSQL.
+- Namespace, labels, selectors, Deployments, ReplicaSets, StatefulSet, Services, Ingress, ConfigMaps, Secrets, PVC, probes, HPA, RBAC, NetworkPolicy, PDB, debugging, and Helm.
+
+Practical outcome:
+
+- Deploy the full ShopSphere platform using raw manifests.
+- Validate Service DNS, NodePort, Ingress, storage, probes, scaling, RBAC, and NetworkPolicy.
+- Break and debug realistic Kubernetes errors.
+- Install, upgrade, rollback, and uninstall the same platform using Helm.
+
+Key commands:
+
+```powershell
+minikube delete
+minikube start --driver=docker --cni=calico
+minikube addons enable ingress
+minikube addons enable metrics-server
+kubectl apply -f final-project/manifests
+kubectl get all -n shopsphere
+kubectl get ingress,hpa,pdb,networkpolicy -n shopsphere
+kubectl apply -f final-project/debug/01-debug-toolbox.yaml
+kubectl exec -n shopsphere debug-toolbox -- wget -qO- http://orders-api:8080/orders
+helm template shopsphere final-project/helm/shopsphere
+helm install shopsphere final-project/helm/shopsphere
+helm upgrade shopsphere final-project/helm/shopsphere --set replicaCount.orders=3
+helm rollback shopsphere 1 -n shopsphere
+helm uninstall shopsphere -n shopsphere
+```
 

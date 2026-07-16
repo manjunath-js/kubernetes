@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shopsphere
+  labels:
+    course: kubernetes-zero-to-hero
+    project: shopsphere
+    environment: production-like

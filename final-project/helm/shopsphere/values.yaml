@@ -1,0 +1,65 @@
+namespace: shopsphere
+
+images:
+  app: busybox:1.36
+  postgres: postgres:16-alpine
+
+replicaCount:
+  frontend: 2
+  orders: 2
+  payments: 2
+
+config:
+  appEnv: production-like
+  logLevel: info
+
+secret:
+  postgresUser: shopsphere_user
+  postgresPassword: shopsphere_password_123
+  postgresDb: shopsphere
+
+frontend:
+  nodePort: 30090
+
+postgres:
+  storage: 1Gi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+apiResources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+frontendResources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi
+
+ingress:
+  enabled: true
+  className: nginx
+  host: shopsphere.local
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  cpuAverageUtilization: 60
+
+networkPolicy:
+  enabled: true
+
+pdb:
+  enabled: true
