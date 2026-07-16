@@ -57,6 +57,11 @@ By the end of this course, you should be able to:
 |   |-- README.md
 |   |-- manifests/
 |   |-- debug/
+|-- final-project/
+|   |-- README.md
+|   |-- manifests/
+|   |-- debug/
+|   |-- helm/shopsphere/
 ```
 
 ## 7-Day Roadmap
@@ -132,6 +137,16 @@ Namespace: day7
 Project: ConfigMap, Secret, PVC, emptyDir, and debugging lab
 Raw manifests: ConfigMap, Secret, PVC, Deployment, emptyDir Pod
 Debug manifests: ImagePullBackOff, CrashLoopBackOff, CreateContainerConfigError, Pending, readiness failure, OOMKilled
+```
+
+Final production-like capstone project has been prepared.
+
+```text
+Namespace: shopsphere
+Project: ShopSphere ecommerce platform
+Raw manifests: frontend, orders API, payments API, PostgreSQL StatefulSet, Services, Ingress, NetworkPolicy, HPA, PDB, RBAC
+Helm chart: final-project/helm/shopsphere
+Debug manifests: toolbox, bad Service selector, missing Secret, bad readiness probe
 ```
 
 ## Quick Start
@@ -244,6 +259,44 @@ kubectl delete namespace day7 --ignore-not-found=true
 minikube stop
 ```
 
+Run the final ShopSphere capstone project:
+
+```powershell
+minikube delete
+minikube start --driver=docker --cni=calico
+minikube addons enable ingress
+minikube addons enable metrics-server
+kubectl apply -f final-project/manifests
+kubectl rollout status deployment/frontend -n shopsphere --timeout=180s
+kubectl rollout status deployment/orders-api -n shopsphere --timeout=180s
+kubectl rollout status deployment/payments-api -n shopsphere --timeout=180s
+kubectl rollout status statefulset/postgres -n shopsphere --timeout=180s
+kubectl get all -n shopsphere
+kubectl get ingress,hpa,pdb,networkpolicy -n shopsphere
+minikube service frontend -n shopsphere --url
+```
+
+Run the final project with Helm:
+
+```powershell
+helm template shopsphere final-project/helm/shopsphere
+helm install shopsphere final-project/helm/shopsphere
+helm list -n shopsphere
+helm upgrade shopsphere final-project/helm/shopsphere --set replicaCount.orders=3
+helm history shopsphere -n shopsphere
+helm rollback shopsphere 1 -n shopsphere
+helm uninstall shopsphere -n shopsphere
+```
+
+Clean up the final project:
+
+```powershell
+kubectl delete -f final-project/debug --ignore-not-found=true
+kubectl delete -f final-project/manifests --ignore-not-found=true
+kubectl delete namespace shopsphere --ignore-not-found=true
+minikube stop
+```
+
 ## Detailed Notes
 
 - [Day 1: Kubernetes Basics, Architecture, Setup, Namespace, and Pod](day1/README.md)
@@ -253,7 +306,9 @@ minikube stop
 - [Day 5: Replicas, ReplicaSet, Ingress, Probes, and Helm](day5/README.md)
 - [Day 6: Kubernetes Networking Deep Dive](day6/README.md)
 - [Day 7: ConfigMaps, Secrets, Storage, and Debugging](day7/README.md)
+- [Final Project: ShopSphere Production-Like Kubernetes Platform](final-project/README.md)
 - [Full 7-Day Roadmap](kubernetes-zero-to-hero-7-days.md)
+
 
 
 

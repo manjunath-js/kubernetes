@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: shopsphere-ingress
+  namespace: shopsphere
+  labels:
+    app.kubernetes.io/name: shopsphere-ingress
+    app.kubernetes.io/part-of: shopsphere
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: shopsphere.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+          - path: /orders
+            pathType: Prefix
+            backend:
+              service:
+                name: orders-api
+                port:
+                  number: 8080
+          - path: /payments
+            pathType: Prefix
+            backend:
+              service:
+                name: payments-api
+                port:
+                  number: 8080

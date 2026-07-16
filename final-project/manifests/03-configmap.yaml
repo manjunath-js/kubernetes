@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shopsphere-config
+  namespace: shopsphere
+  labels:
+    app.kubernetes.io/name: shopsphere
+    app.kubernetes.io/part-of: shopsphere
+    app.kubernetes.io/component: configuration
+data:
+  APP_ENV: "production-like"
+  LOG_LEVEL: "info"
+  ORDERS_SERVICE_URL: "http://orders-api:8080/orders"
+  PAYMENTS_SERVICE_URL: "http://payments-api:8080/payments"
+  POSTGRES_HOST: "postgres"
+  POSTGRES_DB: "shopsphere"
+  index.html: |
+    <html>
+      <head><title>ShopSphere</title></head>
+      <body>
+        <h1>ShopSphere Storefront</h1>
+        <p>Production-like Kubernetes capstone project.</p>
+        <ul>
+          <li><a href="/orders">Orders API</a></li>
+          <li><a href="/payments">Payments API</a></li>
+        </ul>
+      </body>
+    </html>
